@@ -373,4 +373,93 @@ function showModal(id) { document.getElementById(id).style.display='flex'; }
 function closeModal(id) { document.getElementById(id).style.display='none'; }
 </script>
 </body>
+    <div id="chat-circle" onclick="toggleChat()">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" width="35" alt="Chat Icon">
+</div>
+
+<div id="chat-box" style="display:none;">
+    <div id="chat-header">
+        <strong>AWAMED Assistant</strong>
+        <span onclick="toggleChat()" style="float:right; cursor:pointer; font-size:20px;">&times;</span>
+    </div>
+    <div id="chat-content">
+        <p class="bot-msg">Salam! <b>AWAMED Pharmacy</b> mein khush-amdeed. Main aapki kya madad kar sakta hoon?</p>
+    </div>
+    
+    <div id="chat-input-area">
+        <input type="text" id="user-input" placeholder="Sawal likhein (e.g. timing, delivery)..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <div style="padding: 10px; text-align: center; background: #ffffff; border-top: 1px solid #eee;">
+        <a href="https://wa.me/923320501379?text=Salam%20AWAMED%20Pharmacy!%20Mujhe%20medicines%20ke%20baare%20mein%20malomat%20chahiye." 
+           target="_blank" 
+           style="background: #25D366; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);">
+           <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="18" style="margin-right: 8px;">
+           Direct WhatsApp Chat
+        </a>
+    </div>
+</div>
+
+<style>
+/* AWAMED Branding Theme */
+#chat-circle { position: fixed; bottom: 25px; right: 25px; background: #004aad; border-radius: 50%; padding: 15px; cursor: pointer; z-index: 1000; box-shadow: 0 5px 20px rgba(0,0,0,0.3); transition: 0.3s; }
+#chat-box { position: fixed; bottom: 100px; right: 25px; width: 310px; max-height: 550px; background: white; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); display: flex; flex-direction: column; overflow: hidden; z-index: 1000; font-family: 'Segoe UI', Arial, sans-serif; border: 1px solid #f0f0f0; }
+#chat-header { background: #004aad; color: white; padding: 18px; font-size: 17px; font-weight: 600; }
+#chat-content { flex: 1; padding: 15px; background: #fcfcfc; display: flex; flex-direction: column; overflow-y: auto; min-height: 200px; max-height: 300px; }
+.bot-msg { background: #f0f0f0; padding: 10px; border-radius: 15px 15px 15px 0px; margin-bottom: 10px; font-size: 14px; color: #333; line-height: 1.5; align-self: flex-start; max-width: 85%; }
+.user-msg { background: #004aad; color: white; padding: 10px; border-radius: 15px 15px 0px 15px; margin-bottom: 10px; font-size: 14px; align-self: flex-end; max-width: 85%; }
+#chat-input-area { display: flex; padding: 10px; background: white; border-top: 1px solid #eee; }
+#user-input { flex: 1; border: 1px solid #ddd; padding: 8px 15px; border-radius: 25px; outline: none; font-size: 14px; }
+#chat-input-area button { background: #004aad; color: white; border: none; padding: 8px 15px; margin-left: 5px; border-radius: 25px; cursor: pointer; }
+</style>
+
+<script>
+function toggleChat() {
+    var chatBox = document.getElementById("chat-box");
+    chatBox.style.display = (chatBox.style.display === "none") ? "flex" : "none";
+}
+
+function sendMessage() {
+    var input = document.getElementById("user-input");
+    var msg = input.value.trim();
+    if (msg === "") return;
+
+    var content = document.getElementById("chat-content");
+    content.innerHTML += `<div style="display:flex; flex-direction:column;"><p class="user-msg">${msg}</p></div>`;
+    var lowerMsg = msg.toLowerCase();
+    input.value = "";
+    content.scrollTop = content.scrollHeight;
+
+    setTimeout(() => {
+        let response = "Maaf kijiyega, main abhi seekh raha hoon. Mazeed malomat ya order ke liye aap humein niche diye gaye WhatsApp button par message karein.";
+        
+        // 1. Greetings Logic
+        if (lowerMsg.includes("salam") || lowerMsg.includes("hello") || lowerMsg.includes("hi") || lowerMsg.includes("hye") || lowerMsg.includes("assalam")) {
+            response = "Walaikum Assalam! AWAMED Pharmacy mein khush-amdeed. Main aapki kya madad kar sakta hoon?";
+        }
+        // 2. Timing Logic
+        else if (lowerMsg.includes("timing") || lowerMsg.includes("khulti") || lowerMsg.includes("open") || lowerMsg.includes("band") || lowerMsg.includes("close")) {
+            response = "AWAMED Pharmacy **Subah 9:00 bjay say Raat 12:00 bjay tak** khuli rehti hai.";
+        }
+        // 3. Delivery/Order Logic
+        else if (lowerMsg.includes("delivery") || lowerMsg.includes("order") || lowerMsg.includes("home")) {
+            response = "Jee haan, hum home delivery provide karte hain. Order likhwane ke liye niche WhatsApp button par click karein.";
+        }
+        // 4. Location Logic
+        else if (lowerMsg.includes("location") || lowerMsg.includes("address") || lowerMsg.includes("kahan") || lowerMsg.includes("rasta")) {
+            response = "AWAMED Pharmacy Google Maps par maujud hai. Behtar rehnumai ke liye humein WhatsApp par message karein, hum aapko location link bhej denge.";
+        }
+        // 5. Medicine Safety Disclaimer
+        else if (lowerMsg.includes("panadol") || lowerMsg.includes("dawa") || lowerMsg.includes("medicine") || lowerMsg.includes("tablet") || lowerMsg.includes("syrup")) {
+            response = "Dawaon ke istemal se pehle **doctor se mashwara (consult) karna lazmi hai**. Pharmacy se mutaliq mazeed sawal ke liye aap humse rabta kar sakte hain.";
+        }
+
+        content.innerHTML += `<p class="bot-msg">${response}</p>`;
+        content.scrollTop = content.scrollHeight;
+    }, 600);
+}
+
+function handleKeyPress(e) { if (e.keyCode === 13) sendMessage(); }
+</script>
 </html>
